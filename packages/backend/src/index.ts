@@ -6,9 +6,30 @@
  * Happy hacking!
  */
 
+import { createBackendModule, coreServices } from '@backstage/backend-plugin-api';
+
 import { createBackend } from '@backstage/backend-defaults';
+import { createRouter } from './iframeRoute';
 
 const backend = createBackend();
+
+const iframeHandlerModule = createBackendModule({
+  pluginId: 'proxy',
+  moduleId: 'iframe-handler',
+  register: reg => {
+    reg.registerInit({
+      deps: {
+        logger: coreServices.logger,
+        httpRouter: coreServices.httpRouter,
+        httpAuth: coreServices.httpAuth,
+      },
+      async init({ logger, httpRouter, httpAuth }) {
+        httpRouter.use(await createRouter({ logger , httpAuth, httpRouter }));
+        // httpRouter.addAuthPolicy({ path: '/api/proxy/myiframe', allow: 'unauthenticated', });
+      },
+    });
+  }
+});
 
 backend.add(import('@backstage/plugin-app-backend'));
 backend.add(import('@backstage/plugin-proxy-backend'));
@@ -52,4 +73,6 @@ backend.add(import('@backstage/plugin-search-backend-module-techdocs'));
 // kubernetes
 backend.add(import('@backstage/plugin-kubernetes-backend'));
 
+backend.add(import('@internal/plugin-iframe-handler-backend'));
+backend.add(iframeHandlerModule);
 backend.start();

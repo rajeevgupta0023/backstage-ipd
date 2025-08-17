@@ -29,12 +29,15 @@ import {
   AlertDisplay,
   OAuthRequestDialog,
   SignInPage,
+  SidebarPage
 } from '@backstage/core-components';
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
+// import { IframeFrotendWayPage } from '@internal/plugin-iframe-frotend-way';
+import { IframeHandler } from './components/IframeHandler';
 
 const app = createApp({
   apis,
@@ -94,6 +97,9 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+    {/* <Route path="/iframe-frotend-way" element={<IframeFrotendWayPage />} /> */}
+    {/* <Route path="/iframe-handler" element={<IframeHandler />} /> */}
+
   </FlatRoutes>
 );
 
@@ -103,6 +109,11 @@ export default app.createRoot(
     <OAuthRequestDialog />
     <AppRouter>
       <Root>{routes}</Root>
+      <SidebarPage>
+        <FlatRoutes>
+          <Route path="/iframe-handler" element={<IframeHandler />} />
+        </FlatRoutes>
+      </SidebarPage>
     </AppRouter>
   </>,
 );

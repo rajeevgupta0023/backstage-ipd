@@ -31,8 +31,8 @@ import {
 export const DashboardViewer = ({ embedUrl }: { embedUrl: string }) => {
   return (
     <iframe
-      title={embedUrl}
-      src={embedUrl}
+      title={"Embedding"}
+      src={`http://localhost:7007/api/proxy/myiframe?url=${encodeURIComponent(embedUrl)}`}
       width="100%"
       height="100%"
       referrerPolicy="strict-origin-when-cross-origin"

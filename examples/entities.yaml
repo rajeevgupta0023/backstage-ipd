@@ -13,7 +13,7 @@ kind: Component
 metadata:
   name: example-website
   annotations:
-    grafana/overview-dashboard: 'https://www.wikipedia.org/'
+    grafana/overview-dashboard: 'https://sample-webpage-2.onrender.com'
 spec:
   type: website
   lifecycle: experimental

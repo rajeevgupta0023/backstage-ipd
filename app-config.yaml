@@ -19,18 +19,28 @@ backend:
     # host: 127.0.0.1
   csp:
     connect-src: ["'self'", 'http:', 'https:']
+    frame-src: ["'self'", 'http:', 'https:']    # allows iframes to load content from these sources
+    frame-ancestors: ["'self'", 'http://localhost:3000', 'http://localhost:7007']  # allows your frontend to embed backend pages
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
     origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
-    credentials: true
+    credentials: true  # this impacts the catalog proxy. It will start to give 401 error if this is set to false
+  
+
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   database:
     client: better-sqlite3
     connection: ':memory:'
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+
+  auth:
+    # This is the secret used for signing JWT tokens, it should be kept secret
+    # and not shared with anyone. It is used to authenticate users in the system.
+    # See https://backstage.io/docs/auth/service-to-service-auth for more information
+    dangerouslyDisableAuthModule: false
 
 integrations:
   github:
@@ -58,6 +68,11 @@ proxy:
     target: https://grafana.host/
     headers:
       Authorization: Bearer ${GRAFANA_TOKEN}
+  # '/iframe-handler':  
+  #   target: http://localhost:7007
+  #   changeOrigin: true
+  #   pathRewrite:
+  #     '^/iframe-handler': '/api/iframe-handler/iframe'
 
 grafana:
   # Publicly accessible domain
